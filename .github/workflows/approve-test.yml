@@ -5,9 +5,16 @@ on:
     branches: [main]
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3.0.0
+      - run: echo 'スルーされるはず'
+
   deploy:
     environment:
-      name: "test-production"
+      name: "production"
 
     runs-on: ubuntu-latest
 

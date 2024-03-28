@@ -2,22 +2,30 @@ name: 'Approve Test'
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
+  pull_request: 
+    branches: [main, develop]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ (github.event_name == 'pull_request' && 'Development') || (github.ref_name == 'develop' && 'Development') || (true && 'Production') }}
     steps:
-      - run: echo 'スルーされるはず'
-
-
+      - run: |
+          echo "#####Build Start#####"
+          timeout 5
+          echo "#####Build End#####"
       
   deploy:
+    if: ${{ github.event_name == 'push' }}
     needs: [build]
     environment:
-      name: "test-production"
-
+      name: ${{ (github.ref_name == 'develop' && 'Development') || (true && 'Production') }}
     runs-on: ubuntu-latest
 
     steps:
-      - run: echo 'Approve?'
+      - run: |
+          echo "#####Deploy Start#####"
+          timeout 5
+          echo "#####Deploy End#####"

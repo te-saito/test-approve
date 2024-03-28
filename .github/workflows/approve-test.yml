@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment:
-      name: ${{ (github.event_name == 'pull_request' && 'Development') || (github.ref_name == 'develop' && 'Development') || (true && 'Production') }}
+      name: ${{ (github.event_name == 'pull_request' && 'Development_ReadOnly') || (github.ref_name == 'develop' && 'Development_ReadOnly') || (true && 'Production_ReadOnly') }}
     steps:
       - run: |
           echo "#####Build Start#####"

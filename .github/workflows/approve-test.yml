@@ -7,20 +7,34 @@ on:
   pull_request: 
     branches: [main, develop]
 
+
+
 jobs:
-  build:
+  set-env:
     runs-on: ubuntu-latest
     environment:
       name: ${{ (github.event_name == 'pull_request' && 'Development_ReadOnly') || (github.ref_name == 'develop' && 'Development_ReadOnly') || (true && 'Production_ReadOnly') }}
     steps:
       - run: |
-          echo "#####Build Start#####"
+          echo "#####Set env Start#####"
           sleep 5
-          echo "#####Build End#####"
+          echo "#####Set env End#####"
+  
+  plan:
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    needs: [set-env]
+    environment:
+      name: ${{ (github.event_name == 'pull_request' && 'Development_ReadOnly') || (github.ref_name == 'develop' && 'Development_ReadOnly') || (true && 'Production_ReadOnly') }}
+    steps:
+      - run: |
+          echo "#####Plan Start#####"
+          sleep 5
+          echo "#####Plan End#####"
       
-  deploy:
+  apply:
     if: ${{ github.event_name == 'push' }}
-    needs: [build]
+    needs: [set-env]
     environment:
       name: ${{ (github.ref_name == 'develop' && 'Development') || (true && 'Production') }}
     runs-on: ubuntu-latest
